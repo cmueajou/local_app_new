@@ -22,21 +22,21 @@ public void run() {
       JPanel jpanel = new JPanel();
       
       JLabel In_Bye = new JLabel("  Goodbye! Have a niceday");
-      In_Bye.setFont(new Font("Arial", Font.PLAIN, 100));
+      In_Bye.setFont(new Font("Arial", Font.PLAIN, 30));
       In_Bye.setForeground(new Color(0x00B5AD));
       
       JLabel User = new JLabel("Your ID:");
-      User.setFont(new Font(Font.SERIF, Font.PLAIN, 30));
+      User.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
       User.setHorizontalAlignment(SwingConstants.CENTER);
       User.setBorder(new EmptyBorder(100, 0,10,10));
       
       JLabel totalTime = new JLabel("Total Spending Time:");
-      totalTime.setFont(new Font(Font.SERIF, Font.PLAIN, 30));
+      totalTime.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
       totalTime.setHorizontalAlignment(SwingConstants.CENTER);
       totalTime.setBorder(new EmptyBorder(10, 0,10,10));
      
       JLabel l_charge = new JLabel("Total Parking Fee:");
-      l_charge.setFont(new Font(Font.SERIF, Font.PLAIN, 30));
+      l_charge.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
       l_charge.setHorizontalAlignment(SwingConstants.CENTER);
       l_charge.setBorder(new EmptyBorder(10, 0,10,10));
      
@@ -45,15 +45,15 @@ public void run() {
       final JFrame jframe= new JFrame("");
       
       ID.setEditable(false);
-      ID.setFont(new Font(Font.SERIF, Font.PLAIN, 30));
+      ID.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
       ID.setBorder(new EmptyBorder(10,10,10,10));
 
       Time.setEditable(false);
-      Time.setFont(new Font(Font.SERIF, Font.PLAIN, 30));
+      Time.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
       Time.setBorder(new EmptyBorder(10,10,10,10));
       
       ParkingFee.setEditable(false);
-      ParkingFee.setFont(new Font(Font.SERIF, Font.PLAIN, 30));
+      ParkingFee.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
       ParkingFee.setBorder(new EmptyBorder(10,10,10,10));
       
       jframe.setContentPane(jpanel);
@@ -77,11 +77,12 @@ public void run() {
       
       jpanel.setOpaque(true);
       jpanel.setBackground(new Color(0xffffff));
-      jpanel.setBorder(new EmptyBorder(100, 200, 200, 200));
+      jpanel.setBorder(new EmptyBorder(100, 30, 300, 30));
       
       jframe.setUndecorated(true);
       jframe.pack();
-      jframe.setExtendedState(JFrame.MAXIMIZED_BOTH);
+      jframe.setLocation(0,0);
+      jframe.setExtendedState(JFrame.MAXIMIZED_VERT);
       jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       jframe.setVisible(true);
    }
