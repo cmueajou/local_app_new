@@ -23,7 +23,7 @@ public class ReservationInputUI extends Thread{
 
    public static synchronized void inputReservationCode(String res){
 	   ReservationInputMain.resCode = res;
-	   ReservationInputMain.inUI = false;
+	   ReservationInputMain.inUI = false; 
    }
    public static synchronized boolean isConnected(){
 	   return ReservationInputMain.inUI;

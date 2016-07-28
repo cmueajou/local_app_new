@@ -74,7 +74,7 @@ public void run() {
       innerBox2.add(Time);
       innerBox2.add(l_charge);
       innerBox2.add(ParkingFee);
-      
+       
       jpanel.setOpaque(true);
       jpanel.setBackground(new Color(0xffffff));
       jpanel.setBorder(new EmptyBorder(100, 30, 300, 30));
