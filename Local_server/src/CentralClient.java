@@ -46,7 +46,7 @@ public class CentralClient extends Thread {
 
 	public void run() {
 
-		ServerSocket serverSocket = null; // Server socket object
+		//ServerSocket serverSocket = null; // Server socket object
 		Socket clientSocket = null;
 		int portNum = 1006;
 		int msgNum = 0; // Message to display from serverMsg[]
@@ -88,10 +88,10 @@ public class CentralClient extends Thread {
 				out.close();
 				in.close();
 				clientSocket.close();
-				serverSocket.close();
+				//serverSocket.close();
 			} catch (ConnectException ex) {
 				System.out.println(ex.getMessage());
-				//dfdf
+			
 				try {
 					in.close();
 					out.close();
@@ -110,13 +110,35 @@ public class CentralClient extends Thread {
 					out.close();
 					clientSocket.close();
 					//serverSocket.close();
-				} catch (IOException ex) {
+				} catch(ConnectException connection_e){
+					System.out.println("connect exception occur");
+					try {
+						in.close();
+						out.close();
+						clientSocket.close();
+						//serverSocket.close();
+					} catch (IOException ex) {
+						// TODO Auto-generated catch block
+						ex.printStackTrace();
+					}
+				} 
+				catch (IOException ex) {
 					// TODO Auto-generated catch block
 					ex.printStackTrace();
 				}
 				
+				
 			}catch (Exception e) {
 				System.out.println(e.getMessage());
+				try {
+					in.close();
+					out.close();
+					clientSocket.close();
+					//serverSocket.close();
+				} catch (IOException ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}
 			}
 		}
 	}
