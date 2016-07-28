@@ -417,8 +417,8 @@ public class PAUI extends ParkingAttendantApp{
          PAUI_p2_Info_gatestate_gate[i].setSize(100,100);
          PAUI_p2_Info_gatestate_gate[i].setBackground(Color.green);
       }
-      JLabel PAUI_p2_Info_gatestate_gate_Entry = new JLabel("Entry");
-      JLabel PAUI_p2_Info_gatestate_gate_Exit = new JLabel("Exit  ");
+     // JLabel PAUI_p2_Info_gatestate_gate_Entry = new JLabel("Entry");
+     // JLabel PAUI_p2_Info_gatestate_gate_Exit = new JLabel("Exit  ");
       
     //  PAUI_p2_Info_gatestate_gate[0].add(PAUI_p2_Info_gatestate_gate_Entry);
      // PAUI_p2_Info_gatestate_gate[1].add(PAUI_p2_Info_gatestate_gate_Exit);
