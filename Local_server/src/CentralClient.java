@@ -63,7 +63,7 @@ public class CentralClient extends Thread {
 				clientSocket = new Socket(server_ip, portNum);
 			 	System.out.println("\n\nWaiting for connection on port " + portNum + ".");
 			} catch(ConnectException e){
-				System.err.println("\n\n Could not connect to server");
+				System.err.println("\n\n Could not connect to centralclient server");
 			}
 			catch (IOException e) {
 				System.err.println("\n\nCould not instantiate socket on port: " + portNum + " " + e);
@@ -87,7 +87,7 @@ public class CentralClient extends Thread {
 				System.out.println("port :" + portNum + " Mesg : " + resMsg);
 				out.write(resMsg);
 				out.flush();
-
+				
 				out.close();
 				in.close();
 				clientSocket.close();
@@ -133,15 +133,7 @@ public class CentralClient extends Thread {
 				
 			}catch (Exception e) {
 				System.out.println(e.getMessage());
-				try {
-					in.close();
-					out.close();
-					clientSocket.close();
-					//serverSocket.close();
-				} catch (IOException ex) {
-					// TODO Auto-generated catch block
-					ex.printStackTrace();
-				}
+				
 			}
 		}
 	}

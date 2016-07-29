@@ -44,24 +44,232 @@ class Ingate_server extends Thread {
 	String central_server = "192.168.1.3";
 	private int id = -1;
 	String parking_state = "0000";
-	String parking_reserve_state = "0000";
+
 	BlockingQueue queue;
 	BlockingQueue client_queue;
 	BlockingQueue parking_status_queue;
 	int parking_lot_buff;
 	String user_id;
 	String reservation_code = "";
+	ParkingAttendantApp app;
 	
 	Database db;
 
-	public Ingate_server(int id, BlockingQueue _queue, BlockingQueue _client_queue,
+	public Ingate_server(int id, ParkingAttendantApp _app,BlockingQueue _queue, BlockingQueue _client_queue,
 			BlockingQueue _parking_status_queue) {
 		this.id = id;
+		this.app = _app;
 		this.queue = _queue;
 		this.client_queue = _client_queue;
 		this.parking_status_queue = _parking_status_queue;
 		db = new Database("localhost", "root", "1234");
 		
+	}
+	public void run() {
+		int msgNum = 0; // Message to display from serverMsg[]
+		String inputLine; // Data from client
+		String resMsg = "";
+
+		ServerSocket serverSocket = null; // Server socket object
+		Socket clientSocket = null;
+		int portNum = 1005;
+
+		while (true) {
+			/*****************************************************************************
+			 * First we instantiate the server socket. The ServerSocket class
+			 * also does the listen()on the specified port.
+			 *****************************************************************************/
+			try {
+				serverSocket = new ServerSocket(portNum);
+				System.out.println("\n\nWaiting for connection on port " + portNum + ".");
+				System.out.println("Local Information : " + serverSocket.getLocalSocketAddress() + " "
+						+ serverSocket.getLocalPort());
+			} catch (IOException e) {
+
+				System.err.println("\n\nCould not instantiate socket on port: " + portNum + " " + e);
+				System.out.println(e.getMessage());
+				System.exit(1);
+			}
+
+			/******************************
+			 * 1*********************************************** If we get to
+			 * this point, a client has connected. Now we need to instantiate a
+			 * client socket. Once its instantiated, then we accept the
+			 * connection.
+			 *****************************************************************************/
+
+			try {
+
+				clientSocket = serverSocket.accept();
+				System.out.println("clientsocket accept Complete");
+			} catch (Exception e) {
+				System.err.println("Accept failed.");
+				System.exit(1);
+			}
+
+			/*****************************************************************************
+			 * At this point we are all connected and we need to create the
+			 * streams so we can read and write.
+			 *****************************************************************************/
+			System.out.println("Socket : " + portNum + "Connection successful");
+
+			try {
+			
+				BufferedWriter out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+				BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+				System.out.println("Initiate Buffer complete");
+               
+				Calendar cal = Calendar.getInstance();
+				Date date = cal.getTime();
+				String today = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date));
+
+				
+
+				if ((resMsg = in.readLine()) != null) {
+					System.out.println("resMsg : " + resMsg);
+					switch (resMsg.charAt(0)) {
+					case '1': // In front of enterance.
+						System.out.println("case 1 :" + resMsg);
+						
+						reservation_code = resMsg.substring(2, 10);
+						user_id = get_user_id(reservation_code);
+						// System.out.println(reservation_code);
+						this.parking_state = resMsg.substring(11, 15);
+						System.out.println("case 1 : "+ this.parking_state);
+						char[] parking_state_buff = this.parking_state.toCharArray();
+						int assigned_parking_spot=0;
+						for(int i=0; i< parking_state_buff.length;i++){
+							if(parking_state_buff[i] =='0'){
+								assigned_parking_spot = i;
+								break;
+							}
+						}
+						
+						// System.out.println("Parking state :"+parking_state);
+						int result = auth_query(reservation_code);
+						System.out.println("auth_query complete :" + result);
+						
+
+						if (result == 1) {
+							update_reserve_state(reservation_code, 1, assigned_parking_spot);// 시간, reserve_state 최신화
+							System.out.println("update_reserve_state complete");
+							queue.add("2" + " " + "entering" + " " + user_id);
+							Thread.sleep(200);
+							out.write("1Auth" + assigned_parking_spot + " " + user_id);
+							out.flush();
+						} else {
+							System.out.println("wrong access");
+							out.write("1Deny\n");
+							out.flush();
+						}
+						break;
+					case '2':// Occupy one parking slot
+						
+						char[] buff_arry;
+						System.out.println("case2 :" + resMsg);
+						int parking_spot = (int) resMsg.charAt(5) - 48; // Arduino가 보내준 Parkingslot
+						app.changeParkinglotColor(parking_spot-1, 2);// 빨강으로 바꾸기
+						update_parking_spot(user_id, parking_spot); //DB 값에 있는 Parking slot 업데이트하기
+						System.out.println("case2 : " + parking_spot);
+						update_reserve_state(reservation_code, 2, parking_spot);
+						out.write("2Occupied\n");
+						out.flush();
+						buff_arry = this.parking_state.toCharArray();
+						buff_arry[parking_spot - 1] = '1';
+						this.parking_state = new String(buff_arry, 0, buff_arry.length);
+						
+						queue.add("2" + "occupied parking spot #" + parking_spot); // popup에
+																					// 출력하기
+																					// 위한
+																					// 것
+
+						Thread.sleep(200);
+
+						break;
+
+					case '3': // Release one parking slot
+						System.out.println("case3 :" + resMsg);
+						parking_spot = (int) resMsg.charAt(5) - 48;
+						update_reserve_state(reservation_code, 3, parking_spot);
+						out.write("3Release\n");
+						out.flush();
+						app.changeParkinglotColor(parking_spot-1, 0);
+						buff_arry = this.parking_state.toCharArray();
+						buff_arry[parking_spot - 1] = '0';
+						this.parking_state = new String(buff_arry, 0, buff_arry.length);
+						System.out.println( "case 3:" + this.parking_state );
+						
+						System.out.println("3" + " " + this.parking_state);
+						queue.add("3" + " " + this.parking_state);
+						Thread.sleep(200);
+
+						queue.add("2" + " " + "Released parking spot #" + parking_spot);
+						Thread.sleep(200);
+
+						break;
+					case '4': // close outgate door
+						queue.add("2 close open gate");
+						// Thread.sleep(200);
+						out.write("4 messge\n");
+						out.flush();
+						break;
+					case '5': // depart in front of outgate
+						System.out.println("case 5 :" + resMsg);
+
+						String[] msg_data = resMsg.split(" ");
+						parking_spot = (int) msg_data[1].charAt(4) - 48;
+						update_reserve_state(reservation_code, 5, parking_spot);// End
+																				// 시간
+																				// 업데이트
+						// System.out.println("today:"+today);
+						// System.out.println("parking_lot :
+						// "+((int)resMsg.charAt(3)-48));
+						float cal_charge = calculate_charge(today, parking_spot);
+						int charge_time = get_charge_time(today, parking_spot);
+						String release_user_id = get_user_id(parking_spot);
+						out.write("5 " + release_user_id + " " + charge_time + " " + cal_charge + "\n");
+						out.flush();
+						System.out.println("Sending Message to Arduino : " + "5 " + release_user_id + " " + charge_time
+								+ " " + cal_charge + "\n");
+						queue.add("2 Open end_gate");
+						exit_process(parking_spot, today, cal_charge, client_queue, queue);// 새로운
+						// 내용으로
+						// 업데이트
+						 Delete_reservation(release_user_id);
+
+						break;
+					case 6:
+						System.out.println(resMsg);
+						out.write("6complete\n");
+						out.flush();
+						break;
+					case 7:
+						System.out.println(resMsg);
+						String[] res_buff = resMsg.split(" ");
+						// parking_status_queue.add(res_buff[1]);
+						out.write("7complete\n");
+						out.flush();
+
+					default:
+						System.out.println(resMsg);
+						break;
+					}
+				}
+
+				Update_parking_lot_state();
+				out.close();
+				System.out.println("Ingate_server out close complete");
+				in.close();
+				System.out.println("Ingate_server in close complete");
+				clientSocket.close();
+				System.out.println("Ingate_server clientsocket close complete");
+				serverSocket.close();
+				System.out.println("Ingate_server serversocket close complete");
+
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
 	}
 
 	public void judge_cancle_reservation(String[] data, String current_time) {
@@ -151,7 +359,7 @@ class Ingate_server extends Thread {
 
 		} else if (reserve_state == 3) {
 			query = "Update sure_park.reservation set " + "`" + "RESERVE_STATE" + "`" + "=" + "'" + reserve_state + "'"
-					+ " where " + "`" + "RESERVATION_ID" + "`" + "=" + "'" + _reservation_code + "'";
+					+ " where " + "`" + "ASSIGNED_PARKING_SPOT" + "`" + "=" + "'" + parking_spot + "'";
 			System.out.println("release query : " + query);
 
 		} else if (reserve_state == 5) {
@@ -173,30 +381,7 @@ class Ingate_server extends Thread {
 
 	}
 
-	public int update_parking_state(String _parking_state, String _trans_Msg) {
-
-		char[] result = _parking_state.toCharArray();
-		if (_trans_Msg.compareTo("1AUTH") == 0) {
-			for (int i = 0; i < 3; i++) {
-				if (result[i] == '0') {
-					return i;
-				}
-
-			}
-
-		} else if (_trans_Msg.compareTo("Central") == 0) {
-			result = _parking_state.toCharArray();
-			for (int i = 0; i < 3; i++)
-				if (result[i] == '0') {
-					result[i] = '2';
-					_parking_state = new String(result, 0, result.length);
-				}
-			return 0;
-		} else
-			return 0;
-
-		return -1;
-	}
+	
 
 	public int get_charge_time(String _end_time, int parking_spot) {
 
@@ -275,8 +460,10 @@ class Ingate_server extends Thread {
 
 	}
 
-	public int exit_process(int parking_slot, String end_time, float charge, BlockingQueue _queue) {
+	public int exit_process(int parking_slot, String end_time, float charge, BlockingQueue client_queue, BlockingQueue server_queue) {
 		String user_id = get_user_id(parking_slot);
+		int number_of_reservation = get_number_of_reservation();
+		number_of_reservation-=1;
 		String query = "Update sure_park.reservation set" + "`" + "PARKING_END_TIME" + "`" + "=" + "'" + end_time + "'"
 				+ "," + "`" + "CHARGED_FEE" + "`" + "=" + "'" + charge + "'" + " where " + "`" + "ASSIGNED_PARKING_SPOT"
 				+ "`" + "=" + parking_slot;
@@ -284,7 +471,7 @@ class Ingate_server extends Thread {
 		try {
 			db.set_statement(db.get_connection().prepareStatement(query));
 			db.get_statement().executeUpdate();
-			_queue.add("6 " + user_id + " " + end_time + " " + charge);
+			client_queue.add("6 " + user_id + " " + end_time + " " + charge);
 			try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
@@ -378,210 +565,59 @@ class Ingate_server extends Thread {
 		}
 	}
 
-	public void run() {
-		int msgNum = 0; // Message to display from serverMsg[]
-		String inputLine; // Data from client
-		String resMsg = "";
 
-		ServerSocket serverSocket = null; // Server socket object
-		Socket clientSocket = null;
-		int portNum = 1005;
 
-		while (true) {
-			/*****************************************************************************
-			 * First we instantiate the server socket. The ServerSocket class
-			 * also does the listen()on the specified port.
-			 *****************************************************************************/
-			try {
-				serverSocket = new ServerSocket(portNum);
-				System.out.println("\n\nWaiting for connection on port " + portNum + ".");
-				System.out.println("Local Information : " + serverSocket.getLocalSocketAddress() + " "
-						+ serverSocket.getLocalPort());
-			} catch (IOException e) {
+	private void update_parking_spot(String _user_id, int parking_spot) {
+		String query = "Update sure_park.reservation set " + "`" + "ASSIGNED_PARKING_SPOT" + "`" + "=" + "'" + parking_spot + "'"
+				 + " where " + "`"+ "USER_ID" + "`" + "=" + "'" + _user_id + "'";
+		System.out.println("update_parking_spot : "+ query);
+		try {
+			db.set_statement(db.get_connection().prepareStatement(query));
+			db.get_statement().executeUpdate();
 
-				System.err.println("\n\nCould not instantiate socket on port: " + portNum + " " + e);
-				System.out.println(e.getMessage());
-				System.exit(1);
-			}
+		} catch (SQLException ex) {
+			System.out.println(ex.getMessage());
 
-			/******************************
-			 * 1*********************************************** If we get to
-			 * this point, a client has connected. Now we need to instantiate a
-			 * client socket. Once its instantiated, then we accept the
-			 * connection.
-			 *****************************************************************************/
-
-			try {
-
-				clientSocket = serverSocket.accept();
-				System.out.println("clientsocket accept Complete");
-			} catch (Exception e) {
-				System.err.println("Accept failed.");
-				System.exit(1);
-			}
-
-			/*****************************************************************************
-			 * At this point we are all connected and we need to create the
-			 * streams so we can read and write.
-			 *****************************************************************************/
-			System.out.println("Socket : " + portNum + "Connection successful");
-
-			try {
-				BufferedWriter out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-				BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-				System.out.println("Initiate Buffer complete");
-
-				Calendar cal = Calendar.getInstance();
-				Date date = cal.getTime();
-				String today = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date));
-
-				
-
-				if ((resMsg = in.readLine()) != null) {
-					System.out.println("resMsg : " + resMsg);
-					switch (resMsg.charAt(0)) {
-					case '1': // In front of enterance.
-						System.out.println("case 1 :" + resMsg);
-						reservation_code = resMsg.substring(2, 10);
-						user_id = get_user_id(reservation_code);
-						// System.out.println(reservation_code);
-						this.parking_state = resMsg.substring(11, 15);
-						// System.out.println("Parking state :"+parking_state);
-						int result = auth_query(reservation_code);
-						System.out.println("auth_query complete :" + result);
-
-						if (result == 1) {
-							update_reserve_state(reservation_code, 1, 0);
-							System.out.println("update_reserve_state complete");
-							int update_parking_msg = update_parking_state(this.parking_state, "1AUTH");
-
-							queue.add("1" + " " + parking_state);
-							Thread.sleep(200);
-
-							queue.add("2" + " " + "entering" + " " + user_id);
-							Thread.sleep(200);
-							System.out.println("sending msg : " + "1Auth" + update_parking_msg);
-							out.write("1Auth" + update_parking_msg + " " + user_id);
-							out.flush();
-						} else {
-							System.out.println("wrong access");
-							out.write("1Deny\n");
-							out.flush();
-						}
-						break;
-					case '2':// Occupy one parking slot
-						char[] buff_arry;
-						System.out.println("case2 :" + resMsg);
-
-						int parking_spot = (int) resMsg.charAt(5) - 48;
-						System.out.println("case2 : " + parking_spot);
-						update_reserve_state(reservation_code, 2, parking_spot);
-						out.write("2Occupied\n");
-						out.flush();
-						buff_arry = this.parking_state.toCharArray();
-						buff_arry[parking_spot - 1] = '1';
-						this.parking_state = new String(buff_arry, 0, buff_arry.length);
-						buff_arry = this.parking_reserve_state.toCharArray();
-						buff_arry[parking_spot - 1] = '1';
-						this.parking_reserve_state = new String(buff_arry, 0, buff_arry.length);
-
-						queue.add("2" + "occupied parking spot #" + parking_spot); // popup에
-																					// 출력하기
-																					// 위한
-																					// 것
-						Thread.sleep(200);
-
-						queue.add("1" + " " + this.parking_state); // parking
-																	// event 의
-																	// parking_state
-																	// 최신화
-						Thread.sleep(200);
-
-						break;
-
-					case '3': // Release one parking slot
-						System.out.println("case3 :" + resMsg);
-						update_reserve_state(reservation_code, 3, 0);
-						out.write("3Release\n");
-						out.flush();
-
-						buff_arry = this.parking_state.toCharArray();
-						parking_spot = (int) resMsg.charAt(5) - 48;
-						buff_arry[parking_spot - 1] = '0';
-						this.parking_state = new String(buff_arry, 0, buff_arry.length);
-						buff_arry = this.parking_reserve_state.toCharArray();
-						buff_arry[parking_spot - 1] = '0';
-						this.parking_reserve_state = new String(buff_arry, 0, buff_arry.length);
-						queue.add("3" + " " + this.parking_reserve_state);
-						Thread.sleep(200);
-
-						queue.add("2" + " " + "Released parking spot #" + parking_spot);
-						Thread.sleep(200);
-
-						break;
-					case '4': // close outgate door
-						queue.add("2 close open gate");
-						// Thread.sleep(200);
-						out.write("4messge\n");
-						out.flush();
-						break;
-					case '5': // depart in front of outgate
-						System.out.println("case5 :" + resMsg);
-
-						String[] msg_data = resMsg.split(" ");
-						parking_spot = (int) msg_data[1].charAt(4) - 48;
-						update_reserve_state(reservation_code, 5, parking_spot);// End
-																				// 시간
-																				// 업데이트
-						// System.out.println("today:"+today);
-						// System.out.println("parking_lot :
-						// "+((int)resMsg.charAt(3)-48));
-						float cal_charge = calculate_charge(today, parking_spot);
-						int charge_time = get_charge_time(today, parking_spot);
-						String release_user_id = get_user_id(parking_spot);
-						out.write("5 " + release_user_id + " " + charge_time + " " + cal_charge + "\n");
-						out.flush();
-						System.out.println("Sending Message to Arduino : " + "5 " + release_user_id + " " + charge_time
-								+ " " + cal_charge + "\n");
-						queue.add("2 Open end_gate");
-						exit_process(parking_spot, today, cal_charge, client_queue);// 새로운
-						// 내용으로
-						// 업데이트
-						 Delete_reservation(release_user_id);
-
-						break;
-					case 6:
-						System.out.println(resMsg);
-						out.write("6complete\n");
-						out.flush();
-						break;
-					case 7:
-						System.out.println(resMsg);
-						String[] res_buff = resMsg.split(" ");
-						// parking_status_queue.add(res_buff[1]);
-						out.write("7complete\n");
-						out.flush();
-
-					default:
-						System.out.println(resMsg);
-						break;
-					}
-				}
-
-				Update_parking_lot_state();
-				out.close();
-				System.out.println("Ingate_server out close complete");
-				in.close();
-				System.out.println("Ingate_server in close complete");
-				clientSocket.close();
-				System.out.println("Ingate_server clientsocket close complete");
-				serverSocket.close();
-				System.out.println("Ingate_server serversocket close complete");
-
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-			}
 		}
+	}
+
+	private int get_parking_spot(String user_id) {
+		String query = "Select * from sure_park.reservation";
+		System.out.println("get_parking_spot : "+ query);
+		int result=0;
+		try {
+			db.set_statement(db.get_connection().prepareStatement(query));
+			db.set_resultset(db.get_statement().executeQuery());
+		
+			if (db.get_resultset().next()) 
+				result = db.get_resultset().getInt("ASSIGNED_PARKING_SPOT");
+			return result;
+				
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return result;
+		}
+	}
+	
+	public int get_number_of_reservation(){
+		String query = "Select * from sure_park.reservation";
+		int result =0;
+		try {
+			db.set_statement(db.get_connection().prepareStatement(query));
+			db.set_resultset(db.get_statement().executeQuery());
+			if (db.get_resultset().next())
+				result = db.get_resultset().getRow();
+				return result;
+			
+				
+		}catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return 0;
+		}
+		
+		
 	}
 
 }

@@ -10,13 +10,13 @@ public class DataController {
 		BlockingQueue queue = new ArrayBlockingQueue(100);
 		BlockingQueue client_queue = new ArrayBlockingQueue(100);
 		BlockingQueue parking_status_queue = new ArrayBlockingQueue(100);
-
-		Ingate_server s1 = new Ingate_server(1, queue, client_queue, parking_status_queue);
-		CentralServer s2 = new CentralServer(2, queue);
+		ParkingAttendantApp app = new ParkingAttendantApp(3, parking_status_queue);
+		Ingate_server s1 = new Ingate_server(1, app,queue, client_queue, parking_status_queue);
+		CentralServer s2 = new CentralServer(2);
 		CentralClient s3 = new CentralClient(4, client_queue);
 		HeartbeatClient h1 = new HeartbeatClient(5);
 
-		ParkingAttendantApp app = new ParkingAttendantApp(3, parking_status_queue);
+		
 		ParkingEvent e1 = new ParkingEvent(app, queue, s1, s2);
 
 		s1.start();

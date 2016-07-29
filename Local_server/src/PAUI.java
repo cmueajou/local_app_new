@@ -162,6 +162,7 @@ public class PAUI extends ParkingAttendantApp {
 						db.set_statement(db.get_connection().prepareStatement(query));
 						db.set_resultset(db.get_statement().executeQuery());
 						if (db.get_resultset().next()) {
+							if(db.get_resultset().getRow()!=0){
 							user_id = db.get_resultset().getString("USER_ID");
 							reservation_code = db.get_resultset().getString("RESERVATION_ID");
 							String starttime = db.get_resultset().getString("PARKING_START_TIME");
@@ -199,6 +200,11 @@ public class PAUI extends ParkingAttendantApp {
 									String.format("car Info 1" + "\n" + "ID : " + user_id + "\n" + "Reservation code : "
 											+ reservation_code + "\n" + "Start time : " + starttime + "\n"
 											+ "Occupy time : " + current_time + "\n" + "charge : " + charge));
+							}
+							else{
+								JOptionPane.showMessageDialog(null,"");
+							}
+								
 						}
 
 					} catch (SQLException ex) {
@@ -227,40 +233,39 @@ public class PAUI extends ParkingAttendantApp {
 							user_id = db.get_resultset().getString("USER_ID");
 							reservation_code = db.get_resultset().getString("RESERVATION_ID");
 							String starttime = db.get_resultset().getString("PARKING_START_TIME");
-							String _end_time = db.get_resultset().getString("PARKING_END_TIME");
-							System.out.println("starttime :" + starttime);
+							Calendar cal = Calendar.getInstance();
+							Date date = cal.getTime();
+							String current_time = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date));
 							String[] start_data = starttime.split(" ");
-							System.out.println(start_data[0]);
-							System.out.println(start_data[1]);
 							String[] start_date = start_data[0].split("-");
-							System.out.println(start_date[0] + " " + start_date[1] + " " + start_date[2]);
 							String[] start_time = start_data[1].split(":");
-							System.out.println(start_time[0] + " " + start_time[1] + " " + start_time[2]);
-							String[] end_data = _end_time.split(" ");
-							System.out.println("end_data :" + end_data[0] + " " + end_data[1]);
+							String[] end_data = current_time.split(" ");
 							String[] end_date = end_data[0].split("-");
-							System.out.println(end_date[0] + " " + end_date[1] + " " + end_date[2]);
 							String[] end_time = end_data[1].split(":");
-							System.out.println(end_time[0] + " " + end_time[1] + " " + end_time[2]);
 							int charge_time = (((Integer.parseInt(end_date[2]) - Integer.parseInt(start_date[2])) * 24
 									* 60))
 									+ (((Integer.parseInt(end_time[0])) - (Integer.parseInt(start_time[0]))) * 60)
 									+ (Integer.parseInt(end_time[1]) - Integer.parseInt(start_time[1]));
 							charge = charge_time * 0.125;
 
-							// charge =
-							// ((current_time.get(Calendar.HOUR_OF_DAY)-start_time.get(Calendar.HOUR_OF_DAY))*60)+(current_time.get(Calendar.MINUTE)-start_time.get(Calendar.MINUTE))*0.125;
 							JOptionPane.showMessageDialog(null,
 									String.format("car Info 1" + "\n" + "ID : " + user_id + "\n" + "Reservation code : "
 											+ reservation_code + "\n" + "Start time : " + starttime + "\n"
-											+ "Occupy time : " + _end_time + "\n" + "charge : " + charge));
+											+ "Occupy time : " + current_time + "\n" + "charge : " + charge));
 						}
+							
+							else{
+								JOptionPane.showMessageDialog(null,"");
+							}
+								
+						
 
 					} catch (SQLException ex) {
 						System.out.println("SQLException: " + ex.getMessage());
 						System.out.println("SQLState: " + ex.getSQLState());
 						System.out.println("VendorError: " + ex.getErrorCode());
 					}
+
 
 				} else if (temp[1].equals("3")) {
 					String query = "select * from sure_park.reservation where" + "`" + "ASSIGNED_PARKING_SPOT" + "`"
@@ -279,24 +284,32 @@ public class PAUI extends ParkingAttendantApp {
 						db.set_statement(db.get_connection().prepareStatement(query));
 						db.set_resultset(db.get_statement().executeQuery());
 						if (db.get_resultset().next()) {
+							if(db.get_resultset().getRow()!=0){
 							user_id = db.get_resultset().getString("USER_ID");
 							reservation_code = db.get_resultset().getString("RESERVATION_ID");
 							String starttime = db.get_resultset().getString("PARKING_START_TIME");
-							String _end_time = db.get_resultset().getString("PARKING_END_TIME");
-							System.out.println("starttime :" + starttime);
+							Calendar cal = Calendar.getInstance();
+							Date date = cal.getTime();
+							String current_time = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date));
+							// System.out.println("starttime :" + starttime);
 							String[] start_data = starttime.split(" ");
-							System.out.println(start_data[0]);
-							System.out.println(start_data[1]);
+							// System.out.println(start_data[0]);
+							// System.out.println(start_data[1]);
 							String[] start_date = start_data[0].split("-");
-							System.out.println(start_date[0] + " " + start_date[1] + " " + start_date[2]);
+							// System.out.println(start_date[0] + " " +
+							// start_date[1] + " " + start_date[2]);
 							String[] start_time = start_data[1].split(":");
-							System.out.println(start_time[0] + " " + start_time[1] + " " + start_time[2]);
-							String[] end_data = _end_time.split(" ");
-							System.out.println("end_data :" + end_data[0] + " " + end_data[1]);
+							// System.out.println(start_time[0] + " " +
+							// start_time[1] + " " + start_time[2]);
+							String[] end_data = current_time.split(" ");
+							// System.out.println("end_data :" + end_data[0] + "
+							// " + end_data[1]);
 							String[] end_date = end_data[0].split("-");
-							System.out.println(end_date[0] + " " + end_date[1] + " " + end_date[2]);
+							// System.out.println(end_date[0] + " " +
+							// end_date[1] + " " + end_date[2]);
 							String[] end_time = end_data[1].split(":");
-							System.out.println(end_time[0] + " " + end_time[1] + " " + end_time[2]);
+							// System.out.println(end_time[0] + " " +
+							// end_time[1] + " " + end_time[2]);
 							int charge_time = (((Integer.parseInt(end_date[2]) - Integer.parseInt(start_date[2])) * 24
 									* 60))
 									+ (((Integer.parseInt(end_time[0])) - (Integer.parseInt(start_time[0]))) * 60)
@@ -308,7 +321,12 @@ public class PAUI extends ParkingAttendantApp {
 							JOptionPane.showMessageDialog(null,
 									String.format("car Info 1" + "\n" + "ID : " + user_id + "\n" + "Reservation code : "
 											+ reservation_code + "\n" + "Start time : " + starttime + "\n"
-											+ "Occupy time : " + _end_time + "\n" + "charge : " + charge));
+											+ "Occupy time : " + current_time + "\n" + "charge : " + charge));
+							}
+							else{
+								JOptionPane.showMessageDialog(null,"");
+							}
+								
 						}
 
 					} catch (SQLException ex) {
@@ -316,6 +334,7 @@ public class PAUI extends ParkingAttendantApp {
 						System.out.println("SQLState: " + ex.getSQLState());
 						System.out.println("VendorError: " + ex.getErrorCode());
 					}
+
 
 				} else if (temp[1].equals("4")) {
 					String query = "select * from sure_park.reservation where" + "`" + "ASSIGNED_PARKING_SPOT" + "`"
@@ -334,24 +353,32 @@ public class PAUI extends ParkingAttendantApp {
 						db.set_statement(db.get_connection().prepareStatement(query));
 						db.set_resultset(db.get_statement().executeQuery());
 						if (db.get_resultset().next()) {
+							if(db.get_resultset().getRow()!=0){
 							user_id = db.get_resultset().getString("USER_ID");
 							reservation_code = db.get_resultset().getString("RESERVATION_ID");
 							String starttime = db.get_resultset().getString("PARKING_START_TIME");
-							String _end_time = db.get_resultset().getString("PARKING_END_TIME");
-							System.out.println("starttime :" + starttime);
+							Calendar cal = Calendar.getInstance();
+							Date date = cal.getTime();
+							String current_time = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date));
+							// System.out.println("starttime :" + starttime);
 							String[] start_data = starttime.split(" ");
-							System.out.println(start_data[0]);
-							System.out.println(start_data[1]);
+							// System.out.println(start_data[0]);
+							// System.out.println(start_data[1]);
 							String[] start_date = start_data[0].split("-");
-							System.out.println(start_date[0] + " " + start_date[1] + " " + start_date[2]);
+							// System.out.println(start_date[0] + " " +
+							// start_date[1] + " " + start_date[2]);
 							String[] start_time = start_data[1].split(":");
-							System.out.println(start_time[0] + " " + start_time[1] + " " + start_time[2]);
-							String[] end_data = _end_time.split(" ");
-							System.out.println("end_data :" + end_data[0] + " " + end_data[1]);
+							// System.out.println(start_time[0] + " " +
+							// start_time[1] + " " + start_time[2]);
+							String[] end_data = current_time.split(" ");
+							// System.out.println("end_data :" + end_data[0] + "
+							// " + end_data[1]);
 							String[] end_date = end_data[0].split("-");
-							System.out.println(end_date[0] + " " + end_date[1] + " " + end_date[2]);
+							// System.out.println(end_date[0] + " " +
+							// end_date[1] + " " + end_date[2]);
 							String[] end_time = end_data[1].split(":");
-							System.out.println(end_time[0] + " " + end_time[1] + " " + end_time[2]);
+							// System.out.println(end_time[0] + " " +
+							// end_time[1] + " " + end_time[2]);
 							int charge_time = (((Integer.parseInt(end_date[2]) - Integer.parseInt(start_date[2])) * 24
 									* 60))
 									+ (((Integer.parseInt(end_time[0])) - (Integer.parseInt(start_time[0]))) * 60)
@@ -363,7 +390,12 @@ public class PAUI extends ParkingAttendantApp {
 							JOptionPane.showMessageDialog(null,
 									String.format("car Info 1" + "\n" + "ID : " + user_id + "\n" + "Reservation code : "
 											+ reservation_code + "\n" + "Start time : " + starttime + "\n"
-											+ "Occupy time : " + _end_time + "\n" + "charge : " + charge));
+											+ "Occupy time : " + current_time + "\n" + "charge : " + charge));
+							}
+							else{
+								JOptionPane.showMessageDialog(null,"");
+							}
+								
 						}
 
 					} catch (SQLException ex) {
@@ -371,6 +403,7 @@ public class PAUI extends ParkingAttendantApp {
 						System.out.println("SQLState: " + ex.getSQLState());
 						System.out.println("VendorError: " + ex.getErrorCode());
 					}
+
 
 				}
 			}

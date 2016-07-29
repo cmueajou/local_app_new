@@ -5,9 +5,12 @@ import javax.swing.JLabel;
 
 public class ParkingEvent extends Thread {
 	ParkingAttendantApp app;
+	Ingate_server s1;
 	BlockingQueue queue;
 	Ingate_server ingate;
 	CentralServer central_server;
+
+	String parking_status;
 	Database db;
 
 	ParkingEvent(ParkingAttendantApp _app, BlockingQueue _queue, Ingate_server _ingate, CentralServer _central_server) {
@@ -34,27 +37,19 @@ public class ParkingEvent extends Thread {
 					if (Command_arbitor.charAt(0) == '1') { // 11000
 						System.out.println("1 Command_arbitor : " + Command_arbitor);
 						char[] rec_data = Command_arbitor.substring(2).toCharArray();// 최신
-																						// parking_state
-						char[] parking_status_buff = app.parking_status.toCharArray(); // 2000
-						char[] reserve_status_buff = app.parking_reserve_status.toCharArray();
-						for (int i = 0; i < app.parking_status.length(); i++) { // 예약한
-																				// 곳으로
-																				// 점우했을
-																				// 때
-							if (parking_status_buff[i] == '0' && rec_data[i] == '1' && reserve_status_buff[i] == '2') {// blue
-																														// -->
-																														// red
-								parking_status_buff[i] = rec_data[i];
-								reserve_status_buff[i] = rec_data[i];
-								System.out.println("changeparkinglotcolor : red");
-								app.parking_status = new String(parking_status_buff, 0, parking_status_buff.length);
-								app.parking_reserve_status = new String(reserve_status_buff, 0,
-										reserve_status_buff.length);
+						char[] parking_status_buff = this.parking_status.toCharArray(); 
+						for (int i = 0; i < this.parking_status.length(); i++) {
+							if (parking_status_buff[i] == '0' && rec_data[i] == '1') {
+								System.out.println("change parking lot color : red");
 								app.changeParkinglotColor(i, 2);
+								
 								break;
 							}
+							
 
 						}
+						this.parking_status = new String(rec_data,0,rec_data.length);	// parking_state
+
 					} else if (Command_arbitor.charAt(0) == '2') {
 						System.out.println("2 Command_arbitor : " + Command_arbitor);
 						app.broadcast = Command_arbitor.substring(1);
@@ -65,14 +60,13 @@ public class ParkingEvent extends Thread {
 																						// parking
 																						// status
 						System.out.println("3 rec_data : " + rec_data[0] + rec_data[1] + rec_data[2] + rec_data[3]);
-						char[] parking_state_buff = app.parking_status.toCharArray(); // 기존의
+						char[] parking_state_buff = this.parking_status.toCharArray(); // 기존의
 																						// parking
 																						// status
-						char[] parking_reserve_buff = app.parking_reserve_status.toCharArray();
-						for (int i = 0; i < app.parking_reserve_status.length(); i++) {
+						System.out.println("3 parking status : "+ this.parking_status);
+
+						for (int i = 0; i < this.parking_status.length(); i++) {
 							if (parking_state_buff[i] == '1' && rec_data[i] == '0') { // red
-																						// -->
-																						// green
 								parking_state_buff[i] = rec_data[i];
 								System.out.println("changeparkinglotcolor : green");
 								app.changeParkinglotColor(i, 0);
@@ -80,32 +74,6 @@ public class ParkingEvent extends Thread {
 								break;
 							}
 						}
-
-					} else if (Command_arbitor.charAt(0) == '4') {
-						System.out.println("4 Command_arbitor =" + Command_arbitor);
-						char[] rec_data = app.parking_status.toCharArray();
-						System.out.println("rec_data : "+rec_data[0]+rec_data[1]+rec_data[2]+rec_data[3]);
-						char[] parking_reserve_state_buff = app.parking_reserve_status.toCharArray();
-						for (int i = 0; i < app.parking_reserve_status.length(); i++) {
-							if (parking_reserve_state_buff[i] == '0' && rec_data[i] == '0') {// green --> blue																								// blue
-								parking_reserve_state_buff[i] = '2';
-								app.changeParkinglotColor(i, 1);
-								app.parking_reserve_status = new String(parking_reserve_state_buff, 0,
-										parking_reserve_state_buff.length);
-								break;
-							}
-						}
-
-					} else if (Command_arbitor.charAt(0) == '5') {
-						System.out.println("5 Command_arbitor : " + Command_arbitor);
-						String data[] = Command_arbitor.split(" ");
-						int position = Integer.parseInt(data[1]);
-						char[] parking_reserve_state_buff = app.parking_reserve_status.toCharArray();
-						parking_reserve_state_buff[position] = '0';
-						app.changeParkinglotColor(position, 0);
-						app.parking_reserve_status = new String(parking_reserve_state_buff, 0,
-								parking_reserve_state_buff.length);
-						break;
 
 					}
 

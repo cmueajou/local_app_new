@@ -5,27 +5,20 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.BlockingQueue;
 
 public class CentralServer extends Thread {
 	 private int id = -1;
 	   int portNum;
-	  BlockingQueue queue;
 	  String resMsg="";
 	  BufferedWriter out;
 	  Database db_local;
 	  String user_id;
 	  String reservation_start_time;
-	   public CentralServer(int id, BlockingQueue _queue){
+	  
+	  public CentralServer(int id){
 	      this.id = id;
-	      this.queue = _queue;
 	      this.db_local = new Database("localhost","root","1234");
 	      
 	     
@@ -78,7 +71,7 @@ public class CentralServer extends Thread {
 		   String query_local =  "INSERT INTO sure_park.reservation"
 			   		+ "(USER_ID"+","+"RESERVATION_ID"+","+"RESERVATION_START_TIME"+","+"PARKING_START_TIME"+","+"PARKING_END_TIME"+","+"RESERVATION_TIME"+","+"CHARGED_FEE"+","+"ASSIGNED_PARKING_SPOT"+","+"RESERVE_STATE"+")"
 					   +"VALUES("+
-			   		"'"+user_id+"'"+","+"'"+reservation_code+"'"+","+"'"+reserve_time+"'"+","+"'"+"'"+","+"'"+"'"+","+"'"+"'"+","+"'"+0.0+"'"+","+"'"+0+"'"+","+"'"+0+"'"+")";
+			   		"'"+user_id+"'"+","+"'"+reservation_code+"'"+","+"'"+reserve_time+"'"+","+"'"+"'"+","+"'"+"'"+","+"'"+"'"+","+"'"+0.0+"'"+","+"'"+-1+"'"+","+"'"+0+"'"+")";
 		   System.out.println(query_local);
 		   
 		   try {
@@ -99,14 +92,7 @@ public class CentralServer extends Thread {
 			   System.out.println("transfer to central message error");
 			   e.printStackTrace();
 		   }
-		   queue.add("4 reserve_request");//reserve_state 최신화 요청
-		   try {
-			Thread.sleep(200);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		   System.out.println("transfer reserve_request to ParkingEvent.java");
+
 		   try {
 			Thread.sleep(200);
 		} catch (InterruptedException e) {
@@ -134,7 +120,8 @@ public class CentralServer extends Thread {
 	    	 	* First we instantiate the server socket. The ServerSocket class also does
 	    	 	* the listen()on the specified port.
 			 	*****************************************************************************/
-	    	try
+	    	System.out.println("Central Server 1000 start");
+			try
 	    		{
 	        		serverSocket = new ServerSocket(portNum);
 	        		System.out.println ( "\n\nWaiting for connection on port " + portNum + "." );
@@ -171,7 +158,7 @@ public class CentralServer extends Thread {
     	    	System.out.println ("Socket : "+portNum+" Connection successful");
     	    	
     	    
-		        System.out.println("Central Server Buffer load");
+		        System.out.println("Central Server Buffer load : "+portNum);
 	    		try{
 	    	  	out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
 	      		BufferedReader in = new BufferedReader(new InputStreamReader( clientSocket.getInputStream()));
@@ -199,21 +186,37 @@ public class CentralServer extends Thread {
 	    			}
 	    			
 	    		}
-	    		String resMsg = (String)queue.take();
-	    		if(resMsg.charAt(0)=='7'){
-	    			out.write("7 "+user_id+" "+reservation_start_time);
-	    			out.flush();
-	    			
-	    		}
+	    		
+	    		
 	    		
 	    		
 	        		out.close();
 	        		in.close();
-	        		clientSocket.close();
+	        		//clientSocket.close();
 	        		serverSocket.close();
 	    		} catch(Exception e){
 	    			System.out.println(e.getMessage());
 	    		}
 	           }
 	   }
+
+		public int get_number_of_reservation(){
+			String query = "Select * from sure_park.reservation";
+			int result =0;
+			try {
+				db_local.set_statement(db_local.get_connection().prepareStatement(query));
+				db_local.set_resultset(db_local.get_statement().executeQuery());
+				if (db_local.get_resultset().next())
+					result = db_local.get_resultset().getRow();
+					return result;
+				
+					
+			}catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return 0;
+			}
+			
+			
+		}
 }
