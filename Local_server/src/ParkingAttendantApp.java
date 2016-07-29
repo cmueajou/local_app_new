@@ -4,24 +4,6 @@ import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PipedInputStream;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.concurrent.BlockingQueue;
@@ -31,12 +13,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 public class ParkingAttendantApp implements Runnable {
 	protected static final JFrame jframe = new JFrame("Parking-Attendant-App");
 	protected static JPanel PAUI_p2_parkingLot_space[] = new JPanel[4];
-	protected static JLabel PAUI_p3_popup = new JLabel("popup");
+	protected static JLabel PAUI_p3_popup = new JLabel("");
 	protected static JPanel PAUI_p2_Info_gatestate_gate[] = new JPanel[2];
 	protected static JLabel PAUI_p2_info_carNum = new JLabel("Total Car: ");
 
@@ -47,8 +30,8 @@ public class ParkingAttendantApp implements Runnable {
 	protected JLabel AccountLabel;
 	protected JLabel PINLabel;
 
-	protected String ID = "ad1";
-	protected String Pin = "1";
+	protected String ID = "admin";
+	protected String Pin = "1234";
 
 	String parking_status = "0000";
 	String parking_reserve_status = "0000";
@@ -70,7 +53,7 @@ public class ParkingAttendantApp implements Runnable {
 		final JPanel LoginPanel = new JPanel();
 
 		AccountText = new JTextField(5);
-		PINText = new JTextField(5);
+		PINText = new JPasswordField(5);
 
 		AccountLabel = new JLabel("Account number:");
 		PINLabel = new JLabel("PIN number:");

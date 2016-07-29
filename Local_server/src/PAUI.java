@@ -1,31 +1,9 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.TextEvent;
-import java.awt.event.TextListener;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.InputStream;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.BlockingQueue;
@@ -33,11 +11,9 @@ import java.util.concurrent.BlockingQueue;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 public class PAUI extends ParkingAttendantApp {
 	protected int currentCarNum = 0;
@@ -60,14 +36,15 @@ public class PAUI extends ParkingAttendantApp {
 
 		JLabel PAUI_p1_title = new JLabel("CMU Parking lot(Pittsburgh)             ");
 		PAUI_p1_title.setLocation(20, 0);
-		JButton PAUI_p1_authenticationButton = new JButton("user Autentication");
-		PAUI_p1_authenticationButton.setLocation(600, 300);
-		final JTextField PAUI_p1_Code = new JTextField(20);
-		PAUI_p1_Code.setLocation(900, 400);
+		// JButton PAUI_p1_authenticationButton = new JButton("user
+		// Autentication");
+		// PAUI_p1_authenticationButton.setLocation(600, 300);
+		// final JTextField PAUI_p1_Code = new JTextField(20);
+		// PAUI_p1_Code.setLocation(900, 400);
 
 		PAUI_p1.add(PAUI_p1_title);
-		PAUI_p1.add(PAUI_p1_authenticationButton);
-		PAUI_p1.add(PAUI_p1_Code);
+		// PAUI_p1.add(PAUI_p1_authenticationButton);
+		// PAUI_p1.add(PAUI_p1_Code);
 
 		ActionListener a1 = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -88,16 +65,18 @@ public class PAUI extends ParkingAttendantApp {
 					ex.printStackTrace();
 
 				}
-				if (PAUI_p1_Code.getText().equals("1")) {
-					int a = 123;
-					JOptionPane.showMessageDialog(null, String.format("Welcome \n parking lot NO: " + a));
-				} else
-					JOptionPane.showMessageDialog(null, String.format("Wrong Code. please check again"));
+				/*
+				 * if (PAUI_p1_Code.getText().equals("1")) { int a = 123;
+				 * JOptionPane.showMessageDialog(null,
+				 * String.format("Welcome \n parking lot NO: " + a)); } else
+				 * JOptionPane.showMessageDialog(null,
+				 * String.format("Wrong Code. please check again"));
+				 */
 
 			}
 		};
 
-		PAUI_p1_authenticationButton.addActionListener(a1);
+		// PAUI_p1_authenticationButton.addActionListener(a1);
 
 		// p2
 
@@ -401,7 +380,7 @@ public class PAUI extends ParkingAttendantApp {
 			PAUI_p2_parkingLot_infoButton[i].addActionListener(b1);
 		}
 
-		PAUI_p1_authenticationButton.addActionListener(b1);
+		// PAUI_p1_authenticationButton.addActionListener(b1);
 
 		// JLabel PAUI_p2_info_gateState = new JLabel("GateState");
 
