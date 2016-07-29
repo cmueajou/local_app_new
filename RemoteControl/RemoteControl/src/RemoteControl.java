@@ -142,8 +142,9 @@ public class RemoteControl {
 			jpanel.add(bt_exitclose);
 			
 			this.setUndecorated(true);
-			this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-			 
+			this.setExtendedState(JFrame.MAXIMIZED_VERT);
+			this.setLocation(900,0);
+			this.setSize(700,900);
 			this.setVisible(true);
 			this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			
