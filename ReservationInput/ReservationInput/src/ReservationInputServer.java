@@ -28,6 +28,7 @@
 *
 ******************************************************************************************************************/
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -122,11 +123,13 @@ class ReservationInputServer extends Thread{
       				case AUTH:
       					if(inputLine.substring(2, 6).compareTo("1111") == 0){
 							ReservationInputUI.In_StatusText.setText("Parking Lot is Full");
+							ReservationInputUI.In_StatusText.setForeground(Color.RED);
 							out.write("Deny\n");
 							break;
 						}
       					else{
 							ReservationInputUI.In_StatusText.setText("");
+							ReservationInputUI.In_StatusText.setForeground(Color.BLACK);
 							ReservationInputUI.In_ParkingSlotText.setText("");
 							ReservationInputUI.In_NameText.setText("");
 						}
@@ -138,6 +141,7 @@ class ReservationInputServer extends Thread{
 						ReservationInputUI.In_StatusText.setText("Waiting Server...");
 						if(getRescode().length() != 8){
 							ReservationInputUI.In_StatusText.setText("Wrong Code");
+							ReservationInputUI.In_StatusText.setForeground(Color.RED);
 							out.write("Deny\n");
 							break;
 						}
@@ -169,7 +173,8 @@ class ReservationInputServer extends Thread{
 							}
 							else{
 							ReservationInputUI.In_StatusText.setText("PASS");
-							ReservationInputUI.In_ParkingSlotText.setText(inputLine.charAt(5)+"");
+							ReservationInputUI.In_StatusText.setForeground(Color.BLUE);
+							ReservationInputUI.In_ParkingSlotText.setText((inputLine.charAt(5)-48+1)+"");
 							ReservationInputUI.In_NameText.setText(inputLine.split(" ")[1]);
 							System.out.println("PASS");
 							out.write(inputLine+"\n");
@@ -177,6 +182,7 @@ class ReservationInputServer extends Thread{
 							
 						}else{
 							ReservationInputUI.In_StatusText.setText("Wrong Code");
+							ReservationInputUI.In_StatusText.setForeground(Color.RED);
 							System.out.println("FAIL");
 							out.write("Deny\n");
 						}
@@ -200,6 +206,7 @@ class ReservationInputServer extends Thread{
 							e.printStackTrace();
 						}*/
 						ReservationInputUI.In_StatusText.setText("");
+						ReservationInputUI.In_StatusText.setForeground(Color.BLACK);
 						ReservationInputUI.In_ParkingSlotText.setText("");
 						ReservationInputUI.In_NameText.setText("");
 						//localOut.write("4\n");

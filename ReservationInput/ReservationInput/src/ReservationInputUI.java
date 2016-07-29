@@ -20,7 +20,7 @@ public class ReservationInputUI extends Thread{
    public static JTextField In_ParkingSlotText = new JTextField();
    public static JTextField In_StatusText = new JTextField();
    public static JTextField In_NameText = new JTextField();
-
+   
    public static synchronized void inputReservationCode(String res){
 	   ReservationInputMain.resCode = res;
 	   ReservationInputMain.inUI = false; 
@@ -30,12 +30,12 @@ public class ReservationInputUI extends Thread{
    }
    public void run() {
 	   
-      JLabel In_Welcome = new JLabel("  Welcome to Sure-Park!");
-      In_Welcome.setFont(new Font(Font.DIALOG, Font.PLAIN, 30));
+      JLabel In_Welcome = new JLabel("  Entry Terminal");
+      In_Welcome.setFont(new Font(Font.DIALOG, Font.PLAIN, 48));
       In_Welcome.setForeground(new Color(0x00B5AD));
       
-      JLabel In_Code = new JLabel("Reservation Code");
-      In_Code.setFont(new Font(Font.SERIF, Font.BOLD, 30));
+      JLabel In_Code = new JLabel("");
+      In_Code.setFont(new Font(Font.SERIF, Font.BOLD, 25));
       In_Code.setBorder(new EmptyBorder(10, 0,10,10));
    
       final JTextField In_CodeText = new JTextField("");
@@ -43,15 +43,16 @@ public class ReservationInputUI extends Thread{
       In_CodeText.setHorizontalAlignment(SwingConstants.CENTER);
       
       JLabel In_Name = new JLabel("Your ID:");
-      In_Name.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
+      In_Name.setFont(new Font(Font.SERIF, Font.PLAIN, 25));
       In_Name.setBorder(new EmptyBorder(10, 0,10,10));
       
       JLabel In_ParkingSlot = new JLabel("Allocated Slot #:");
-      In_ParkingSlot.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
+      In_ParkingSlot.setFont(new Font(Font.SERIF, Font.PLAIN, 25));
       In_ParkingSlot.setBorder(new EmptyBorder(10, 0,10,10));
       
+      
       JLabel In_Status = new JLabel("Authentication Result:");
-      In_Status.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
+      In_Status.setFont(new Font(Font.SERIF, Font.PLAIN, 25));
       In_Status.setBorder(new EmptyBorder(10, 0,10,10));
       
       JLabel sureparkIcon = new JLabel(new ImageIcon("./resource/SureparkImage.png"));
@@ -61,7 +62,9 @@ public class ReservationInputUI extends Thread{
       In_StatusText.setBorder(new EmptyBorder(10,10,10,10));
       
       In_ParkingSlotText.setEditable(false);
-      In_ParkingSlotText.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
+      In_ParkingSlotText.setFont(new Font(Font.SERIF, Font.PLAIN, 150));
+      In_ParkingSlotText.setForeground(Color.BLUE);
+      In_ParkingSlotText.setHorizontalAlignment(SwingConstants.CENTER);
       In_ParkingSlotText.setBorder(new EmptyBorder(10,10,10,10));
       
       In_NameText.setEditable(false);
@@ -128,7 +131,7 @@ public class ReservationInputUI extends Thread{
       //jpanel.setBorder(new TitledBorder(""));
       jframe.setUndecorated(true);
       //Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-      jframe.setLocation(565,0);
+      jframe.setLocation(550,0);
       jframe.setExtendedState(JFrame.MAXIMIZED_VERT);
       jframe.pack();
       
@@ -138,8 +141,10 @@ public class ReservationInputUI extends Thread{
       
       while(true){
     	  if(isConnected()){
+    		  In_Code.setText("Please Input a Code");
     		  In_submitButton.setEnabled(true);
     	  }else{
+    		  In_Code.setText("Wait a Moment..");
     		  In_submitButton.setEnabled(false);
     	  }
       }

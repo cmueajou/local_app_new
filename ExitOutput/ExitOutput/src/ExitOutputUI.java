@@ -21,22 +21,22 @@ public void run() {
    
       JPanel jpanel = new JPanel();
       
-      JLabel In_Bye = new JLabel("  Goodbye! Have a niceday");
-      In_Bye.setFont(new Font("Arial", Font.PLAIN, 30));
+      JLabel In_Bye = new JLabel("  Exit Terminal");
+      In_Bye.setFont(new Font("Arial", Font.PLAIN, 50));
       In_Bye.setForeground(new Color(0x00B5AD));
       
       JLabel User = new JLabel("Your ID:");
-      User.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
+      User.setFont(new Font(Font.SERIF, Font.PLAIN, 25));
       User.setHorizontalAlignment(SwingConstants.CENTER);
       User.setBorder(new EmptyBorder(100, 0,10,10));
       
       JLabel totalTime = new JLabel("Total Spending Time:");
-      totalTime.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
+      totalTime.setFont(new Font(Font.SERIF, Font.PLAIN, 25));
       totalTime.setHorizontalAlignment(SwingConstants.CENTER);
       totalTime.setBorder(new EmptyBorder(10, 0,10,10));
      
       JLabel l_charge = new JLabel("Total Parking Fee:");
-      l_charge.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
+      l_charge.setFont(new Font(Font.SERIF, Font.PLAIN, 25));
       l_charge.setHorizontalAlignment(SwingConstants.CENTER);
       l_charge.setBorder(new EmptyBorder(10, 0,10,10));
      
@@ -53,7 +53,8 @@ public void run() {
       Time.setBorder(new EmptyBorder(10,10,10,10));
       
       ParkingFee.setEditable(false);
-      ParkingFee.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
+      ParkingFee.setFont(new Font(Font.SERIF, Font.PLAIN, 100));
+      ParkingFee.setForeground(Color.BLUE);
       ParkingFee.setBorder(new EmptyBorder(10,10,10,10));
       
       jframe.setContentPane(jpanel);
