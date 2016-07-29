@@ -42,7 +42,7 @@ public void run() {
      
       JLabel sureparkIcon = new JLabel(new ImageIcon("./resource/SureparkImage.png"));
       
-      final JFrame jframe= new JFrame("");
+      final JFrame jframe= new JFrame(" ");
       
       ID.setEditable(false);
       ID.setFont(new Font(Font.SERIF, Font.PLAIN, 20));

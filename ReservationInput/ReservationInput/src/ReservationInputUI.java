@@ -68,7 +68,7 @@ public class ReservationInputUI extends Thread{
       In_ParkingSlotText.setBorder(new EmptyBorder(10,10,10,10));
       
       In_NameText.setEditable(false);
-      In_NameText.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
+      In_NameText.setFont(new Font(Font.SERIF , Font.PLAIN, 20));
       In_NameText.setBorder(new EmptyBorder(10,10,10,10));
       
       

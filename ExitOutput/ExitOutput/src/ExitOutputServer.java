@@ -83,7 +83,7 @@ class ExitOutputServer extends Thread{
         	}
     		catch (Exception e)
         	{
-        		System.err.println("Accept failed.");
+        		System.err.println("Accept failed. ");
         		System.exit(1);
         	}
 

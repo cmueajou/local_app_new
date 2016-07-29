@@ -169,7 +169,7 @@ class ReservationInputServer extends Thread{
 						if(inputLine.substring(1, 5).compareTo("Auth") == 0 ){
 							if(inputLine.charAt(5) == '-'){
 								ReservationInputUI.In_ParkingSlotText.setText("Full");
-								System.out.println("FULL");
+								System.out.println("FULL ");
 							}
 							else{
 							ReservationInputUI.In_StatusText.setText("PASS");
