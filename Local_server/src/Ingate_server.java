@@ -70,6 +70,7 @@ class Ingate_server extends Thread {
 		String inputLine; // Data from client
 		String resMsg = "";
 
+		
 		ServerSocket serverSocket = null; // Server socket object
 		Socket clientSocket = null;
 		int portNum = 1005;
@@ -190,6 +191,7 @@ class Ingate_server extends Thread {
 					case '3': // Release one parking slot
 						System.out.println("case3 :" + resMsg);
 						parking_spot = (int) resMsg.charAt(5) - 48;
+						user_id = get_user_id(parking_spot);
 						update_reserve_state(reservation_code, 3, parking_spot);
 						out.write("3Release\n");
 						out.flush();
@@ -364,7 +366,7 @@ class Ingate_server extends Thread {
 
 		} else if (reserve_state == 5) {
 			query = "Update sure_park.reservation set " + "`" + "PARKING_END_TIME" + "`" + "=" + "'" + today + "'"
-					+ " where " + "`" + "RESERVATION_ID" + "`" + "=" + "'" + _reservation_code + "'";
+					+ " where " + "`" + "ASSIGNED_PARKING_SPOT" + "`" + "=" + "'" + parking_spot + "'";
 			System.out.println(query);
 
 		} else {
