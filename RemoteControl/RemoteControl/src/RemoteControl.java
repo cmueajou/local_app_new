@@ -153,7 +153,7 @@ public class RemoteControl {
 			label_mode.setBackground(Color.GREEN);
 			label_mode.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 40));
 			
-			bt_entryopen.setFont(new Font(Font.DIALOG_INPUT, Font.PLAIN, 30));
+			bt_entryopen.setFont(new Font(Font.DIALOG_INPUT, Font.PLAIN, 31));
 			bt_entryopen.setBackground(Color.WHITE);
 			bt_entryopen.setEnabled(false);
 			bt_entryopen.addActionListener(this);
