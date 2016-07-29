@@ -74,8 +74,8 @@ public class ParkingAttendantApp implements Runnable {
 		PINLabel.setFont(new Font(Font.SERIF, Font.PLAIN, 50));
 		AccountLabel.setBorder(new EmptyBorder(100, 10, 10, 10));
 		JButton App_submitButton = new JButton("Submit");
-		
-		
+		App_submitButton.setForeground(new Color(0xffffff));
+		App_submitButton.setBackground(new Color(0x00B5AD));
 		App_submitButton.setFont(new Font(Font.SERIF, Font.PLAIN, 50));
 	
 		

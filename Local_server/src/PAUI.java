@@ -1,5 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -10,10 +12,13 @@ import java.util.concurrent.BlockingQueue;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 public class PAUI extends ParkingAttendantApp {
 	protected int currentCarNum = 0;
@@ -26,25 +31,7 @@ public class PAUI extends ParkingAttendantApp {
 		super(id, queue);
 		db = new Database("localhost", "root", "1234");
 
-		JPanel p = new JPanel();
-		p.setLayout(new BorderLayout());
-		JPanel PAUI_p1 = new JPanel();
-		PAUI_p1.setLocation(0, 0);
-		PAUI_p1.setSize(800, 50);
-		PAUI_p2_info_time = timer;
-		// PAUI_p1.setLayout(new FlowLayout());
-
-		JLabel PAUI_p1_title = new JLabel("CMU Parking lot(Pittsburgh)             ");
-		PAUI_p1_title.setLocation(20, 0);
-		// JButton PAUI_p1_authenticationButton = new JButton("user
-		// Autentication");
-		// PAUI_p1_authenticationButton.setLocation(600, 300);
-		// final JTextField PAUI_p1_Code = new JTextField(20);
-		// PAUI_p1_Code.setLocation(900, 400);
-
-		PAUI_p1.add(PAUI_p1_title);
-		// PAUI_p1.add(PAUI_p1_authenticationButton);
-		// PAUI_p1.add(PAUI_p1_Code);
+	
 
 		ActionListener a1 = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -77,21 +64,63 @@ public class PAUI extends ParkingAttendantApp {
 		};
 
 		// PAUI_p1_authenticationButton.addActionListener(a1);
-
+		//JPanel p = new JPanel();
+		//p.setLayout(new BorderLayout());
+		//p.setOpaque(false);
+		//p.setBackground(Color.WHITE);
+		Box PAUI_p1 = new Box(BoxLayout.X_AXIS);
+		//jframe.setSize(300,500);
+		//PAUI_p1.setLocation(0, 0);
+		//PAUI_p1.setSize(800, 50);
+		PAUI_p2_info_time = timer;
+		// PAUI_p1.setLayout(new FlowLayout());
+		JLabel sureparkIcon = new JLabel(new ImageIcon("./resource/SureparkImage.png"));
+		JLabel PAUI_p1_title = new JLabel("   CMU Parking lot(Pittsburgh)");
+		PAUI_p1_title.setFont(new Font(Font.DIALOG, Font.PLAIN, 45));
+		PAUI_p1_title.setForeground(new Color(0x00B5AD));
+		//PAUI_p1_title.setLocation(20, 0);
+		// JButton PAUI_p1_authenticationButton = new JButton("user
+		// Autentication");
+		// PAUI_p1_authenticationButton.setLocation(600, 300);
+		// final JTextField PAUI_p1_Code = new JTextField(20);
+		// PAUI_p1_Code.setLocation(900, 400);
+		PAUI_p1.add(sureparkIcon);
+		PAUI_p1.add(PAUI_p1_title);
+		// PAUI_p1.add(PAUI_p1_authenticationButton);
+		// PAUI_p1.add(PAUI_p1_Code);
 		// p2
-
-		JPanel PAUI_p2 = new JPanel();
-		PAUI_p2.setLocation(0, 100);
+		Box outter_pl = new Box(BoxLayout.Y_AXIS);
+		outter_pl.setBackground(Color.WHITE);
+		//Box outter_p2 = new Box(BoxLayout.LINE_AXIS);
+		//outterPanel.setLayout(new GridLayout(2,2));
+		Box PAUI_p2 = new Box(BoxLayout.X_AXIS);
+		//PAUI_p2.setLocation(0, 100);
 		// PAUI_p2.setLayout(new FlowLayout());
 
-		JPanel PAUI_p2_parkingLot = new JPanel();
-		PAUI_p2_parkingLot.setLocation(0, 100);
-		PAUI_p2_parkingLot.setSize(500, 500);
+		Box PAUI_p2_parkingLot = new Box(BoxLayout.X_AXIS);
+		//PAUI_p2_parkingLot.setLocation(0, 100);
+		//PAUI_p2_parkingLot.setSize(500, 500);
 
-		JPanel PAUI_p2_info = new JPanel();
-		PAUI_p2_info.setLocation(500, 100);
-		PAUI_p2_info.setSize(500, 300);
+		//Box PAUI_p2_info = new Box(BoxLayout.X_AXIS);
+		//PAUI_p2_info.setLocation(500, 100);
+		//PAUI_p2_info.setSize(500, 300);
+		//PAUI_p2.add();
+		//PAUI_p2.add(PAUI_p2_info);
 
+		Box PAUI_p3 = new Box(BoxLayout.X_AXIS);
+		// PAUI_p3.setLayout(new FlowLayout());
+
+		PAUI_p3.add(PAUI_p3_popup);
+
+		//outter_pl.add(PAUI_p1, "North");
+		PAUI_p2.add(PAUI_p2_parkingLot);
+		outter_pl.add(PAUI_p1);
+		outter_pl.add(PAUI_p2);
+		outter_pl.add(PAUI_p3);
+	//p.add();
+		
+		//jframe.add(PAUI_p1);
+		jframe.add(outter_pl);
 		// PAUI_p2_parkingLot.setLayout(new FlowLayout());
 		// PAUI_p2_info.setLayout(new GridLayout(3,1));
 
@@ -101,23 +130,40 @@ public class PAUI extends ParkingAttendantApp {
 		char[] parking_state_buff = super.parking_status.toCharArray();
 		for (int i = 0; i < 4; i++) {
 			PAUI_p2_parkingLot_space[i] = new JPanel();
-			PAUI_p2_parkingLot_space[i].setSize(120, 300);
-			if (reserve_buff[i] == '0' && parking_state_buff[i] == '0')
+			PAUI_p2_parkingLot_space[i].setSize(100, 100);
+			PAUI_p2_parkingLot_space[i].setBorder(new LineBorder(Color.black));
+			JLabel t_t = new JLabel("");
+			t_t.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 40));
+			t_t.setForeground(Color.white);
+			PAUI_p2_parkingLot_space[i].add(t_t);
+			if (reserve_buff[i] == '0' && parking_state_buff[i] == '0'){
+				t_t.setText("<html>E<br>M<br>P<br>T<br>Y</html>");			
 				PAUI_p2_parkingLot_space[i].setBackground(Color.green);
-			else if (reserve_buff[i] == '2' && parking_state_buff[i] == '0')
+			}
+			else if (reserve_buff[i] == '2' && parking_state_buff[i] == '0'){
+				t_t.setText("-");				
 				PAUI_p2_parkingLot_space[i].setBackground(Color.blue);
+			}
 			else if (reserve_buff[i] == '0' && parking_state_buff[i] == '1')
+			{	
+				t_t.setText("<html>O<br>C<br>C<br>U<br>P<br>I<br>E<br>D</html>");
 				PAUI_p2_parkingLot_space[i].setBackground(Color.red);
+			}
+			
+			
 			PAUI_p2_parkingLot_infoButton[i] = new JButton("Info");
-			PAUI_p2_parkingLot_No[i] = new JLabel(Integer.toString(i + 1));
-
+			PAUI_p2_parkingLot_infoButton[i].setForeground(Color.WHITE);
+			PAUI_p2_parkingLot_infoButton[i].setBackground(new Color(0x00B5AD));
+			PAUI_p2_parkingLot_No[i] = new JLabel();
+			PAUI_p2_parkingLot_No[i].setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
 		}
 
 		for (int i = 0; i < 4; i++) {
 			// PAUI_p2_parkingLot_space[i].setLayout(new BorderLayout());
-			PAUI_p2_parkingLot_infoButton[i].setText("info " + (i + 1));
-			PAUI_p2_parkingLot_No[i].setText(Integer.toString(i + 1));
-
+			PAUI_p2_parkingLot_infoButton[i].setText("INFO " + (i + 1));
+			PAUI_p2_parkingLot_infoButton[i].setFont(new Font("", Font.PLAIN, 30));
+			PAUI_p2_parkingLot_No[i].setText("Parking Slot "+Integer.toString(i + 1));
+			
 		}
 
 		Box b[] = new Box[4];
@@ -388,19 +434,7 @@ public class PAUI extends ParkingAttendantApp {
 		// PAUI_p2_info.add(PAUI_p2_Info_gatestate_gate[0]);
 		// PAUI_p2_info.add(PAUI_p2_Info_gatestate_gate[1]);
 
-		PAUI_p2.add(PAUI_p2_parkingLot);
-		PAUI_p2.add(PAUI_p2_info);
 
-		JPanel PAUI_p3 = new JPanel();
-		// PAUI_p3.setLayout(new FlowLayout());
-
-		PAUI_p3.add(PAUI_p3_popup);
-
-		p.add(PAUI_p1, "North");
-		p.add(PAUI_p2, "West");
-		p.add(PAUI_p3, "South");
-
-		jframe.add(p);
 
 		// PAUI_p1.setLocation(0, 0);
 		// PAUI_p1.setSize(800,50);
