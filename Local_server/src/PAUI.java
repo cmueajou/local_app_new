@@ -96,7 +96,7 @@ public class PAUI extends ParkingAttendantApp {
 		Box PAUI_p2 = new Box(BoxLayout.X_AXIS);
 		//PAUI_p2.setLocation(0, 100);
 		// PAUI_p2.setLayout(new FlowLayout());
-
+		
 		Box PAUI_p2_parkingLot = new Box(BoxLayout.X_AXIS);
 		//PAUI_p2_parkingLot.setLocation(0, 100);
 		//PAUI_p2_parkingLot.setSize(500, 500);
@@ -109,7 +109,7 @@ public class PAUI extends ParkingAttendantApp {
 
 		Box PAUI_p3 = new Box(BoxLayout.X_AXIS);
 		// PAUI_p3.setLayout(new FlowLayout());
-
+		PAUI_p3_popup.setFont(new Font(Font.DIALOG, Font.ITALIC, 40));
 		PAUI_p3.add(PAUI_p3_popup);
 
 		//outter_pl.add(PAUI_p1, "North");
@@ -132,21 +132,21 @@ public class PAUI extends ParkingAttendantApp {
 			PAUI_p2_parkingLot_space[i] = new JPanel();
 			PAUI_p2_parkingLot_space[i].setSize(100, 100);
 			PAUI_p2_parkingLot_space[i].setBorder(new LineBorder(Color.black));
-			JLabel t_t = new JLabel("");
-			t_t.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 40));
-			t_t.setForeground(Color.white);
-			PAUI_p2_parkingLot_space[i].add(t_t);
+			
+			t_t[i].setFont(new Font(Font.SANS_SERIF, Font.BOLD, 40));
+			t_t[i].setForeground(Color.white);
+			PAUI_p2_parkingLot_space[i].add(t_t[i]);
 			if (reserve_buff[i] == '0' && parking_state_buff[i] == '0'){
-				t_t.setText("<html>E<br>M<br>P<br>T<br>Y</html>");			
+				t_t[i].setText("<html>E<br>M<br>P<br>T<br>Y</html>");			
 				PAUI_p2_parkingLot_space[i].setBackground(Color.green);
 			}
 			else if (reserve_buff[i] == '2' && parking_state_buff[i] == '0'){
-				t_t.setText("-");				
+				t_t[i].setText("-");				
 				PAUI_p2_parkingLot_space[i].setBackground(Color.blue);
 			}
 			else if (reserve_buff[i] == '0' && parking_state_buff[i] == '1')
 			{	
-				t_t.setText("<html>O<br>C<br>C<br>U<br>P<br>I<br>E<br>D</html>");
+				t_t[i].setText("<html>O<br>C<br>C<br>U<br>P<br>I<br>E<br>D</html>");
 				PAUI_p2_parkingLot_space[i].setBackground(Color.red);
 			}
 			

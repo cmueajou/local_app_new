@@ -229,6 +229,7 @@ class Ingate_server extends Thread {
 						float cal_charge = calculate_charge(today, parking_spot);
 						int charge_time = get_charge_time(today, parking_spot);
 						String release_user_id = get_user_id(parking_spot);
+						System.out.println("Case 5 release_user_id : "+ release_user_id+" parking_spot : "+parking_spot);
 						out.write("5 " + release_user_id + " " + charge_time + " " + cal_charge + "\n");
 						out.flush();
 						System.out.println("Sending Message to Arduino : " + "5 " + release_user_id + " " + charge_time
@@ -509,7 +510,7 @@ class Ingate_server extends Thread {
 
 	public String get_user_id(int parking_spot) {
 		char ch = (char) (parking_spot + 48);
-		String query = "SELECT * FROM sure_park.reservation";
+		String query = "SELECT * FROM sure_park.reservation where "+"`"+"ASSIGNED_PARKING_SPOT"+"`"+"="+"'"+parking_spot+"'";
 
 		try {
 			db.set_statement(db.get_connection().prepareStatement(query));

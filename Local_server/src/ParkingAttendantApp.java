@@ -23,6 +23,7 @@ import javax.swing.border.EmptyBorder;
 public class ParkingAttendantApp implements Runnable {
 	protected static final JFrame jframe = new JFrame("Parking-Attendant-App");
 	protected static JPanel PAUI_p2_parkingLot_space[] = new JPanel[4];
+	protected static JLabel t_t[] = new JLabel[4];
 	protected static JLabel PAUI_p3_popup = new JLabel("");
 	protected static JPanel PAUI_p2_Info_gatestate_gate[] = new JPanel[2];
 	protected static JLabel PAUI_p2_info_carNum = new JLabel("Total Car: ");
@@ -46,6 +47,9 @@ public class ParkingAttendantApp implements Runnable {
 	public ParkingAttendantApp(int id, BlockingQueue _queue) {
 		this.id = id;
 		this.queue = _queue;
+		for(int i=0;i<4;i++){
+			t_t[i] = new JLabel(" ");
+		}
 
 	}
 
@@ -149,12 +153,18 @@ public class ParkingAttendantApp implements Runnable {
 	}
 
 	public void changeParkinglotColor(int no, int state) {
-		if (state == 2)
+		PAUI_p2_parkingLot_space[no].add(t_t[no]);
+		if (state == 2){
+			t_t[no].setText("<html>O<br>C<br>C<br>U<br>P<br>I<br>E<br>D</html>");
 			PAUI_p2_parkingLot_space[no].setBackground(Color.red); // 점유
-		else if (state == 1)
+		}
+		else if (state == 1){
 			PAUI_p2_parkingLot_space[no].setBackground(Color.blue); // 예약
-		if (state == 0)
+		}
+		if (state == 0){
+			t_t[no].setText("<html>E<br>M<br>P<br>T<br>Y</html>");	
 			PAUI_p2_parkingLot_space[no].setBackground(Color.green); // 빈공간
+		}
 	}
 
 	public void popUpMeassage(String popUp) {

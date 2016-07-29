@@ -14,7 +14,7 @@ public class CentralClient extends Thread {
 	private int id = -1;
 	int portNum;
 	BlockingQueue queue;
-	BufferedReader in ;
+	BufferedReader in;
 	String resMsg = "";
 	BufferedWriter out;
 	String server_ip = "192.168.1.3";
@@ -46,7 +46,7 @@ public class CentralClient extends Thread {
 
 	public void run() {
 
-		//ServerSocket serverSocket = null; // Server socket object
+		// ServerSocket serverSocket = null; // Server socket object
 		Socket clientSocket = null;
 		int portNum = 1006;
 		int msgNum = 0; // Message to display from serverMsg[]
@@ -61,11 +61,10 @@ public class CentralClient extends Thread {
 			 *****************************************************************************/
 			try {
 				clientSocket = new Socket(server_ip, portNum);
-			 	System.out.println("\n\nWaiting for connection on port " + portNum + ".");
-			} catch(ConnectException e){
+				System.out.println("\n\nWaiting for connection on port " + portNum + ".");
+			} catch (ConnectException e) {
 				System.err.println("\n\n Could not connect to centralclient server");
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				System.err.println("\n\nCould not instantiate socket on port: " + portNum + " " + e);
 				System.exit(1);
 			}
@@ -81,59 +80,58 @@ public class CentralClient extends Thread {
 			try {
 				out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
 				in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
 				String result = "";
 				System.out.println("port :" + portNum + "start");
 				resMsg = (String) queue.take();
 				System.out.println("port :" + portNum + " Mesg : " + resMsg);
 				out.write(resMsg);
 				out.flush();
-				
+
 				out.close();
 				in.close();
 				clientSocket.close();
-				//serverSocket.close();
+				// serverSocket.close();
 			} catch (ConnectException ex) {
 				System.out.println(ex.getMessage());
-			
+
 				try {
 					in.close();
 					out.close();
 					clientSocket.close();
-					//serverSocket.close();
+					// serverSocket.close();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-			}catch(SocketException socket_exception){
-				
+
+			} catch (SocketException socket_exception) {
+
 				System.out.println("SocketException occur");
 				try {
 					in.close();
 					out.close();
 					clientSocket.close();
-					//serverSocket.close();
-				} catch(ConnectException connection_e){
+					// serverSocket.close();
+				} catch (ConnectException connection_e) {
 					System.out.println("connect exception occur");
 					try {
 						in.close();
 						out.close();
 						clientSocket.close();
-						//serverSocket.close();
+						// serverSocket.close();
 					} catch (IOException ex) {
 						// TODO Auto-generated catch block
 						ex.printStackTrace();
 					}
-				} 
-				catch (IOException ex) {
+				} catch (IOException ex) {
 					// TODO Auto-generated catch block
 					ex.printStackTrace();
 				}
-				
-				
-			}catch (Exception e) {
+
+			} catch (Exception e) {
 				System.out.println(e.getMessage());
-				
+
 			}
 		}
 	}
