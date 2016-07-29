@@ -1,12 +1,16 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.concurrent.BlockingQueue;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,6 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 public class ParkingAttendantApp implements Runnable {
 	protected static final JFrame jframe = new JFrame("Parking-Attendant-App");
@@ -28,6 +33,7 @@ public class ParkingAttendantApp implements Runnable {
 
 	protected JLabel AccountLabel;
 	protected JLabel PINLabel;
+	protected JLabel Title;
 
 	protected String ID = "admin";
 	protected String Pin = "1234";
@@ -49,26 +55,52 @@ public class ParkingAttendantApp implements Runnable {
 
 		final JPanel LoginPanel = new JPanel();
 
+		
+		Title = new JLabel("   Management");
+		Title.setFont(new Font(Font.DIALOG, Font.BOLD, 60));
+		Title.setForeground(new Color(0x00B5AD));
+		JLabel sureparkIcon = new JLabel(new ImageIcon("./resource/SureparkImage.png"));
+		  
 		AccountText = new JTextField(5);
+		AccountText.setFont(new Font(Font.SERIF, Font.PLAIN, 40));
 		PINText = new JPasswordField(5);
-
+		PINText.setFont(new Font(Font.SERIF, Font.PLAIN, 40));
+		JLabel Blank = new JLabel("-----");
+		Blank.setForeground(Color.WHITE);
+		Blank.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
 		AccountLabel = new JLabel("Account number:");
+		AccountLabel.setFont(new Font(Font.SERIF, Font.PLAIN, 50));
 		PINLabel = new JLabel("PIN number:");
-
+		PINLabel.setFont(new Font(Font.SERIF, Font.PLAIN, 50));
+		AccountLabel.setBorder(new EmptyBorder(100, 10, 10, 10));
 		JButton App_submitButton = new JButton("Submit");
-
-		LoginPanel.setLayout(new FlowLayout());
-		LoginPanel.add(AccountLabel);
-		LoginPanel.add(AccountText);
-		LoginPanel.add(PINLabel);
-		LoginPanel.add(PINText);
-		LoginPanel.add(App_submitButton);
-
+		
+		
+		App_submitButton.setFont(new Font(Font.SERIF, Font.PLAIN, 50));
+	
+		
+		Box outterBox = new Box(BoxLayout.Y_AXIS);
+		Box box2 = new Box(BoxLayout.X_AXIS);
+		Box box1 = new Box(BoxLayout.Y_AXIS);
+		LoginPanel.setBorder(new EmptyBorder(100, 50, 300, 50));
+		LoginPanel.setOpaque(true);
+	    LoginPanel.setBackground(new Color(0xffffff));  
+		LoginPanel.add(outterBox);
+		outterBox.add(box2);
+		box2.add(sureparkIcon);
+		box2.add(Title);
+		outterBox.add(box1);
+		box1.add(AccountLabel);
+		box1.add(AccountText);
+		box1.add(PINLabel);
+		box1.add(PINText);
+		box1.add(Blank);
+		box1.add(App_submitButton);
+		
 		jframe.add(LoginPanel);
-
+		
 		jframe.pack();
-
-		jframe.setSize(700, 300);
+		jframe.setSize(800, 900);
 		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jframe.setVisible(true);
 
