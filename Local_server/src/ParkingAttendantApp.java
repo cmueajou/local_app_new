@@ -10,7 +10,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import java.awt.Color;
 import java.awt.Container;
@@ -43,7 +42,7 @@ public class ParkingAttendantApp implements Runnable {
 
 	public int id = -1;
 	protected JTextField AccountText;
-	protected JPasswordField PINText;
+	protected JTextField PINText;
 
 	protected JLabel AccountLabel;
 	protected JLabel PINLabel;
@@ -71,7 +70,7 @@ public class ParkingAttendantApp implements Runnable {
 		final JPanel LoginPanel = new JPanel();
 
 		AccountText = new JTextField(5);
-		PINText = new JPasswordField(5);
+		PINText = new JTextField(5);
 
 		AccountLabel = new JLabel("Account number:");
 		PINLabel = new JLabel("PIN number:");

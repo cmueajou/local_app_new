@@ -51,7 +51,7 @@ class Ingate_server extends Thread {
 	int parking_lot_buff;
 	String user_id;
 	String reservation_code = "";
-	String[] grace_time = new String[4];
+	
 	Database db;
 
 	public Ingate_server(int id, BlockingQueue _queue, BlockingQueue _client_queue,
@@ -61,9 +61,7 @@ class Ingate_server extends Thread {
 		this.client_queue = _client_queue;
 		this.parking_status_queue = _parking_status_queue;
 		db = new Database("localhost", "root", "1234");
-		for (int i = 0; i < 4; i++)
-			grace_time[i] = "";
-
+		
 	}
 
 	public void judge_cancle_reservation(String[] data, String current_time) {
@@ -129,7 +127,6 @@ class Ingate_server extends Thread {
 		Calendar cal = Calendar.getInstance();
 		Date date = cal.getTime();
 		String today = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date));
-		this.grace_time[parking_spot - 1] = today;
 		String query = "";
 		String central_query = "";
 		if (reserve_state == 1) {
@@ -438,7 +435,7 @@ class Ingate_server extends Thread {
 				Date date = cal.getTime();
 				String today = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date));
 
-				judge_cancle_reservation(grace_time, today);
+				
 
 				if ((resMsg = in.readLine()) != null) {
 					System.out.println("resMsg : " + resMsg);
@@ -550,7 +547,7 @@ class Ingate_server extends Thread {
 						exit_process(parking_spot, today, cal_charge, client_queue);// 새로운
 						// 내용으로
 						// 업데이트
-						// Delete_reservation(release_user_id);
+						 Delete_reservation(release_user_id);
 
 						break;
 					case 6:

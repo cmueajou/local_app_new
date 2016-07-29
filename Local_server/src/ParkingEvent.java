@@ -83,14 +83,12 @@ public class ParkingEvent extends Thread {
 
 					} else if (Command_arbitor.charAt(0) == '4') {
 						System.out.println("4 Command_arbitor =" + Command_arbitor);
-						char[] rec_data = Command_arbitor.substring(2).toCharArray();
-						// System.out.println("4 Command_arbitor :"+rec_data);
+						char[] rec_data = app.parking_status.toCharArray();
+						System.out.println("rec_data : "+rec_data[0]+rec_data[1]+rec_data[2]+rec_data[3]);
 						char[] parking_reserve_state_buff = app.parking_reserve_status.toCharArray();
 						for (int i = 0; i < app.parking_reserve_status.length(); i++) {
-							if (parking_reserve_state_buff[i] == '0' && rec_data[i] == '2') {// green
-																								// -->
-																								// blue
-								parking_reserve_state_buff[i] = rec_data[i];
+							if (parking_reserve_state_buff[i] == '0' && rec_data[i] == '0') {// green --> blue																								// blue
+								parking_reserve_state_buff[i] = '2';
 								app.changeParkinglotColor(i, 1);
 								app.parking_reserve_status = new String(parking_reserve_state_buff, 0,
 										parking_reserve_state_buff.length);

@@ -18,15 +18,15 @@ public class DataController {
 
 		ParkingAttendantApp app = new ParkingAttendantApp(3, parking_status_queue);
 		ParkingEvent e1 = new ParkingEvent(app, queue, s1, s2);
-		
+
 		s1.start();
-		
+
 		s2.start();
-		
-		 s3.start();
+
+		s3.start();
 		app.run();
 		e1.start();
-		h1.start();
+		// h1.start();
 
 		// s1.start();
 

@@ -6,6 +6,7 @@ import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -51,14 +52,15 @@ public class CentralServer extends Thread {
 		   
 		   String query = "SELECT * from sure_park.reservation";
 		   int result=0;
+		   int query_result;
+		   PreparedStatement stmt;
 		   try {
 			   db_local.set_statement(db_local.get_connection().prepareStatement(query));
 			   db_local.set_resultset(db_local.get_statement().executeQuery());
 			   System.out.println("query execute");
 			   if(db_local.get_resultset().next())
 			    result =db_local.get_resultset().getRow();
-			   user_id = db_local.get_resultset().getString("USER_ID");
-			   reservation_start_time = db_local.get_resultset().getString("RESERVATION_START_TIME");
+			   
 			   System.out.println("result : "+result);
 			   return result;
 		} catch (SQLException e) {

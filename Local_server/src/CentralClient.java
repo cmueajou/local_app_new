@@ -61,8 +61,11 @@ public class CentralClient extends Thread {
 			 *****************************************************************************/
 			try {
 				clientSocket = new Socket(server_ip, portNum);
-				System.out.println("\n\nWaiting for connection on port " + portNum + ".");
-			} catch (IOException e) {
+			 	System.out.println("\n\nWaiting for connection on port " + portNum + ".");
+			} catch(ConnectException e){
+				System.err.println("\n\n Could not connect to server");
+			}
+			catch (IOException e) {
 				System.err.println("\n\nCould not instantiate socket on port: " + portNum + " " + e);
 				System.exit(1);
 			}
