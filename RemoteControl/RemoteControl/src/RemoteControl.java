@@ -151,33 +151,33 @@ public class RemoteControl {
 			jpanel.setLayout(new GridLayout(3,2));
 
 			label_mode.setBackground(Color.GREEN);
-			label_mode.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 60));
+			label_mode.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 40));
 			
-			bt_entryopen.setFont(new Font(Font.DIALOG_INPUT, Font.PLAIN, 50));
+			bt_entryopen.setFont(new Font(Font.DIALOG_INPUT, Font.PLAIN, 30));
 			bt_entryopen.setBackground(Color.WHITE);
 			bt_entryopen.setEnabled(false);
 			bt_entryopen.addActionListener(this);
 			
-			bt_entryclose.setFont(new Font(Font.DIALOG_INPUT, Font.PLAIN, 50));
+			bt_entryclose.setFont(new Font(Font.DIALOG_INPUT, Font.PLAIN, 30));
 			bt_entryclose.setBackground(Color.WHITE);
 			bt_entryclose.setEnabled(false);
 			bt_entryclose.addActionListener(this);
 			
-			bt_exitopen.setFont(new Font(Font.DIALOG_INPUT, Font.PLAIN, 50));
+			bt_exitopen.setFont(new Font(Font.DIALOG_INPUT, Font.PLAIN, 30));
 			bt_exitopen.setBackground(Color.WHITE);
 			bt_exitopen.setEnabled(false);
 			bt_exitopen.addActionListener(this);
 			
-			bt_exitclose.setFont(new Font(Font.DIALOG_INPUT, Font.PLAIN, 50));
+			bt_exitclose.setFont(new Font(Font.DIALOG_INPUT, Font.PLAIN, 30));
 			bt_exitclose.setBackground(Color.WHITE);
 			bt_exitclose.setEnabled(false);
 			bt_exitclose.addActionListener(this);
 			
-			bt_emeron.setFont(new Font(Font.DIALOG_INPUT, Font.PLAIN, 50));
+			bt_emeron.setFont(new Font(Font.DIALOG_INPUT, Font.PLAIN, 25));
 			bt_emeron.setBackground(Color.RED);
 			bt_emeron.addActionListener(this);
 			
-			bt_emeroff.setFont(new Font(Font.DIALOG_INPUT, Font.PLAIN, 50));
+			bt_emeroff.setFont(new Font(Font.DIALOG_INPUT, Font.PLAIN, 25));
 			bt_emeroff.setBackground(Color.GREEN);
 			bt_emeroff.addActionListener(this);
 		}
